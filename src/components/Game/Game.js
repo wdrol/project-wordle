@@ -11,10 +11,12 @@ import GuessResults from "../GuessResults/GuessResults";
 // Pick a random word on every pageload.
 const answer = sample(WORDS);
 
-// To make debugging easier, we'll log the solution in the console.
+// Log answer in the console for debugging.
 console.info({ answer });
 
 function Game() {
+  const [win, setWin] = React.useState(false);
+  const [lose, setlose] = React.useState(false);
   const [guessList, setGuessList] = React.useState([]);
 
   function getLetters(text) {
@@ -44,15 +46,41 @@ function Game() {
   }
 
   function addGuess(text) {
-    if (guessList.length > NUM_OF_GUESSES_ALLOWED - 1) return;
+    const item = formatGuessItem(text);
 
-    setGuessList([...guessList, formatGuessItem(text)]);
+    setGuessList([...guessList, item]);
+
+    const correct = item.letters.filter((x) => x.status === "correct");
+
+    if (correct.length === item.letters.length) {
+      setWin(true);
+    } else if (guessList.length > NUM_OF_GUESSES_ALLOWED - 2) {
+      setlose(true);
+    }
   }
 
   return (
     <>
       <GuessResults guessList={guessList} emptyList={getEmptyList()} />
-      <GuessInput addGuess={addGuess} />
+
+      {win && (
+        <div className="happy banner">
+          <p>
+            <strong>Congratulations!</strong> You got it in
+            <strong> {guessList.length} guesses</strong>.
+          </p>
+        </div>
+      )}
+
+      {lose && (
+        <div className="sad banner">
+          <p>
+            Sorry, the correct answer is <strong>{answer}</strong>.
+          </p>
+        </div>
+      )}
+
+      {!win && !lose && <GuessInput addGuess={addGuess} />}
     </>
   );
 }
