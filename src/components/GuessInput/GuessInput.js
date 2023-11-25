@@ -1,6 +1,6 @@
 import React from "react";
 
-function GuessInput() {
+function GuessInput({ addGuess }) {
   const [text, setText] = React.useState("");
 
   function handleSubmit(event) {
@@ -9,7 +9,7 @@ function GuessInput() {
     if (text.length !== 5) {
       alert("Guess must be 5 characters long.");
     } else {
-      console.log(text);
+      addGuess(text);
       setText("");
     }
   }
