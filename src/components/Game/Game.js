@@ -23,6 +23,16 @@ function Game() {
     return a;
   }
 
+  function getEmptyList() {
+    const emptyList = [];
+
+    for (let i = 0; i < NUM_OF_GUESSES_ALLOWED - guessList.length; i++) {
+      emptyList.push(formatGuessItem("     "));
+    }
+
+    return emptyList;
+  }
+
   function formatGuessItem(text) {
     return { id: Math.random(), letters: getLetters(text) };
   }
@@ -35,7 +45,7 @@ function Game() {
 
   return (
     <>
-      <GuessResults guessList={guessList} formatGuessItem={formatGuessItem} />
+      <GuessResults guessList={guessList} emptyList={getEmptyList()} />
       <GuessInput addGuess={addGuess} />
     </>
   );
